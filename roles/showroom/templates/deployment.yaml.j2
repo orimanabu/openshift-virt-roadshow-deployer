@@ -37,6 +37,10 @@ spec:
       - name: content
         image: ghcr.io/rhpds/showroom-content:latest
         env:
+#        - name: http_proxy
+#	  value: http://your.http.proxy:8080
+#        - name: https_proxy
+#	  value: http://your.http.proxy:8080
         - name: GIT_REPO_URL
           value: https://github.com/rhpds/openshift-virt-roadshow-cnv-multi-user
         - name: GIT_REPO_REF
