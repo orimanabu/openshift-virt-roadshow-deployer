@@ -1,0 +1,36 @@
+- name: pwd
+  shell:
+    cmd: pwd
+  check_mode: false
+  ignore_errors: true
+  changed_when: false
+  register: pwd
+- name: debug
+  debug:
+    msg: "{{ pwd }}"
+
+- name: debug pwd
+  debug:
+    msg: "{{ pwd.stdout }}"
+
+- name: Make output directory
+  file:
+    path: "{{ pwd.stdout }}/manifests"
+    state: directory
+    mode: '0755'
+
+- name: Render manifest file from template
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ pwd.stdout }}/manifests/{{ item }}"
+  loop:
+    - cm-showroom-index.yaml
+    - cm-showroom-proxy-config.yaml
+    - cm-showroom-userdata.yaml
+    - deployment.yaml
+    - ns.yaml
+    - rolebinding.yaml
+    - pvc.yaml
+    - route.yaml
+    - sa.yaml
+    - service.yaml

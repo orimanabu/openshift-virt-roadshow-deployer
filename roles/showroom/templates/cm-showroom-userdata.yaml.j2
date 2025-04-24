@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: showroom-userdata
+data:
+  user_data.yml: |
+    "console_url": "https://{{ ocp.console_fqdn }}"
+    "guid": "{{ ocp.guid }}"
+    "login_command": "oc login --insecure-skip-tls-verify=false -u {{ username }} -p {{ password }} https://{{ ocp.api_fqdn }}:6443"
+    "openshift_cluster_ingress_domain": "apps.{{ ocp_subdomain }}"
+    "openshift_console_url": "https://{{ ocp.console_fqdn }}"
+    "password": "{{ password }}"
+    "user": "{{ username }}"
+    "vcenter_console": "(place holder)"
+    "vcenter_datastore": "(place holder)"
+    "vcenter_domain": "(place holder)"
+    "vcenter_full_user": "(place holder)"
+    "vcenter_password": "(place holder)"
+    "vcenter_user": "(place holder)"

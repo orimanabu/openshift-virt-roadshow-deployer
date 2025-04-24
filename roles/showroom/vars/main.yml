@@ -1,0 +1,12 @@
+#SPDX-License-Identifier: MIT-0
+---
+#topdir: /home/ori/showroom/ansible
+
+username: user1
+password: user1pass
+ocp_subdomain: ocp-odf.lab.local
+
+ocp:
+  console_fqdn: "console-openshift-console.apps.{{ ocp_subdomain }}"
+  api_fqdn: "api.{{ ocp_subdomain }}"
+  guid: xxxx

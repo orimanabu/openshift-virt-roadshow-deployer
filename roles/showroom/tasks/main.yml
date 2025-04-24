@@ -1,0 +1,5 @@
+- name: Generate manifests
+  include_tasks: render.yml
+
+- name: Apply manifests
+  include_tasks: apply.yml

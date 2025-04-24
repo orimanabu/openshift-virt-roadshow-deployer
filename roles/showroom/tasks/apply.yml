@@ -1,0 +1,59 @@
+- name: get token
+  shell:
+    cmd: oc whoami -t
+  ignore_errors: true
+  changed_when: false
+  register: token
+
+- name: exit
+  fail:
+    msg: "Do `oc login` before running this playbook."
+  when: token.rc != 0
+
+- name: get cluster info
+  kubernetes.core.k8s_cluster_info:
+    host: "https://{{ ocp.api_fqdn }}:6443"
+    api_key: "{{ token.stdout }}"
+    validate_certs: false
+  changed_when: false
+  register: result
+
+- name: ns, rolebinding, sa, pvc
+  kubernetes.core.k8s:
+    host: "https://{{ ocp.api_fqdn }}:6443"
+    api_key: "{{ token.stdout }}"
+    validate_certs: false
+    state: present
+    namespace: "showroom-{{ username }}"
+    src: "{{ item }}"
+  loop:
+    - ./manifests/ns.yaml
+    - ./manifests/rolebinding.yaml
+    - ./manifests/sa.yaml
+    - ./manifests/pvc.yaml
+
+- name: configmaps
+  kubernetes.core.k8s:
+    host: "https://{{ ocp.api_fqdn }}:6443"
+    api_key: "{{ token.stdout }}"
+    validate_certs: false
+    state: present
+    namespace: "showroom-{{ username }}"
+    src: "{{ item }}"
+  loop:
+    - ./manifests/cm-showroom-index.yaml
+    - ./manifests/cm-showroom-proxy-config.yaml
+    - ./manifests/cm-showroom-userdata.yaml
+
+- name: service, route, deployment
+  kubernetes.core.k8s:
+    host: "https://{{ ocp.api_fqdn }}:6443"
+    api_key: "{{ token.stdout }}"
+    validate_certs: false
+    state: present
+    namespace: "showroom-{{ username }}"
+    src: "{{ item }}"
+  loop:
+    - ./manifests/service.yaml
+    - ./manifests/route.yaml
+    - ./manifests/deployment.yaml
